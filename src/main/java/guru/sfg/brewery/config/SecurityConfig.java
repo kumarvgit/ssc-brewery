@@ -40,11 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // specify no password encoder in SpEL (spring Expression language)
         .password("{noop}guru")
         .roles("ADMIN")
+//                // using and is called Fluent API
         .and()
         .withUser("user")
                 // specify no password encoder in SpEL (spring Expression language)
         .password("{noop}password")
         .roles("USER")
+        .and()
+        .withUser("scott")
+        .password("{noop}tiger")
+        .roles("CUSTOMER")
         ;
     }
 
