@@ -22,4 +22,9 @@ class BeerRestControllerIT extends BaseIT {
         // this is a random UUID and the intention of the test is to get access to this URL
         mockMvc.perform(get("/api/v1/beer/7cdce614-4b24-4a66-987a-8f8e831b7527").with(anonymous())).andExpect(status().isOk());
     }
+
+    @Test
+    void findBeerUpcByUpc() throws Exception {
+        mockMvc.perform(get("/api/v1/beerUpc/0631234200036").with(anonymous())).andExpect(status().isOk());
+    }
 }
