@@ -3,6 +3,7 @@ package guru.sfg.brewery.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -31,4 +32,51 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().and()
                 .httpBasic();
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+        .withUser("spring")
+                // specify no password encoder in SpEL (spring Expression language)
+        .password("{noop}guru")
+        .roles("ADMIN")
+//                // using and is called Fluent API
+        .and()
+        .withUser("user")
+                // specify no password encoder in SpEL (spring Expression language)
+        .password("{noop}password")
+        .roles("USER")
+        .and()
+        .withUser("scott")
+        .password("{noop}tiger")
+        .roles("CUSTOMER")
+        ;
+    }
+
+// commenting this after adding
+// guru.sfg.brewery.config.SecurityConfig.configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
+//    /**
+//     * provide own user details service overriding below
+//     * spring.security.user.name=spring
+//     * spring.security.user.password=guru
+//     * @return {@link UserDetailsService}
+//     */
+//    @Override
+//    @Bean
+//    protected UserDetailsService userDetailsService() {
+//
+//        UserDetails admin = User.withDefaultPasswordEncoder()
+//                .username("spring")
+//                .password("guru")
+//                .roles("ADMIN")
+//                .build();
+//
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("password")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(admin, user);
+//    }
 }
