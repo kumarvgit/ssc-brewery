@@ -13,9 +13,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(authorize -> {
-                    authorize.antMatchers("/").permitAll();
+                    authorize.antMatchers("/","/webjars/**", "/login", "/resources/**").permitAll();
                 })
                 // Above authorization needs to be done before generic otherwise we will not get the bypass
+                .authorizeRequests(authorize -> {
+                    authorize.antMatchers("/beers/find", "/beers*").permitAll(); // adding find beer to permit all
+                })
+                // Ant matcher for beer service
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
