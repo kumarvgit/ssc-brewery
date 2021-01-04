@@ -1,4 +1,4 @@
-# samesite cooki value
+# samesite cookie value
 ## None
 ## Lax (from subdomain)
 ## Strict (must exactly match)
@@ -10,3 +10,14 @@
 #### override default user ``` spring.security.user.name```
 #### overriding spring generated UUID as password ``` spring.security.user.password```
 ## Filter chain <a>https://docs.spring.io/spring-security/site/docs/current/reference/html5/#servlet-architecture</a>
+
+# Password encoding
+* Encryption -> this can be decrypted
+* Hash -> generates same value every time
+* Hash + salt - > salt is a random value
+### Spring security matches the has against the raw value
+
+## Types of encoder
+* Nooperation encoder - NoOpPasswordEncoder
+* LDAP - LdapShaPasswordEncoder
+* SHA256 - StandardPasswordEncoder
