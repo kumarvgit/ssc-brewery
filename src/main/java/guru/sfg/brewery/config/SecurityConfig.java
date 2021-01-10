@@ -98,13 +98,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .withUser("scott")
         // using LDAP encoder
-        .password("{ldap}{SSHA}GW0AHJ3Wav8dDXOt9bx+6cUzyOFh3jjDwMX42g==")
+//        .password("{ldap}{SSHA}GW0AHJ3Wav8dDXOt9bx+6cUzyOFh3jjDwMX42g==")
+
 
          // SHA 256 encoder
 //         .password("83f2e696f86dc7df0918b8b81d7ff581f0eda18c75a693b83d717d57b444aaa7e0b08946a7029535")
 
           // BCrypt encoder
 //         .password("$2a$10$/8DKY6LrYQbZ.gLwpXl50OsKYuy9bMfWY1ybtlcghuEfQ0nsSZzbO")
+
+         // overriding default encoder with a strength of 15
+         .password("{bcrypt15}$2a$15$CRQh43PC/vZ1wo0IkCCK7uyr03WXOIjoAlhGDsGg49JiIfmkMmlKe")
          .roles("CUSTOMER")
         ;
     }

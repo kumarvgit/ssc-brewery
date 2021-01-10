@@ -81,4 +81,17 @@ public class PasswordEncoderTests {
 
         assertTrue(bCrypt.matches(PASSOWRD, encodedPassword));
     }
+
+    @Test
+    public void testBCrypt15() {
+        PasswordEncoder bCrypt = new BCryptPasswordEncoder(15);
+
+        System.out.println("Password is: tiger");
+        System.out.println(bCrypt.encode("tiger"));
+
+        String encodedPassword = bCrypt.encode(PASSOWRD);
+        // how spring security matches the password against a hash
+
+        assertTrue(bCrypt.matches(PASSOWRD, encodedPassword));
+    }
 }
