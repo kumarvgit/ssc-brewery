@@ -59,21 +59,44 @@ public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProce
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-        String userName = getUsername(httpServletRequest);
-        userName = (null != userName) ? userName : "";
+//        String userName = getUsername(httpServletRequest);
+//        userName = (null != userName) ? userName : "";
+//
+//        String password = getPassword(httpServletRequest);
+//        password = (null != password ? password : "");
+//
+//        log.debug("Authentication user: " + userName);
+//        // get token
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
+//
+//        if (!StringUtils.isEmpty(userName)) {
+//            // set the token
+//            return this.getAuthenticationManager().authenticate(token);
+//        } else {
+//            return null;
+//        }
 
-        String password = getPassword(httpServletRequest);
-        password = (null != password ? password : "");
+        {
+            String userName = getUsername(httpServletRequest);
+            String password = getPassword(httpServletRequest);
 
-        log.debug("Authentication user: " + userName);
-        // get token
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
+            if (userName == null) {
+                userName = "";
+            }
 
-        if (!StringUtils.isEmpty(userName)) {
-            // set the token
-            return this.getAuthenticationManager().authenticate(token);
-        } else {
-            return null;
+            if (password == null) {
+                password = "";
+            }
+
+            log.debug("Authenticating User: " + userName);
+
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
+
+            if (!StringUtils.isEmpty(userName)) {
+                return this.getAuthenticationManager().authenticate(token);
+            } else {
+                return null;
+            }
         }
 
     }

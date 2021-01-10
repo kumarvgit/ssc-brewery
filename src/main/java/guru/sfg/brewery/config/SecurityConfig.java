@@ -1,7 +1,9 @@
 package guru.sfg.brewery.config;
 
 import guru.sfg.brewery.security.SfgPasswordEncoderFactories;
+import guru.sfg.brewery.services.security.JpaUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -75,17 +77,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //         adding a header filter
         http.addFilterBefore(
-                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-             .addFilterBefore(
+                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class).csrf().disable();
+        http.addFilterBefore(
                         restUrlAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
-        http.csrf().disable()
-                .authorizeRequests(authorize -> {
+        http.authorizeRequests(authorize -> {
                     authorize.antMatchers("/","/webjars/**", "/login", "/resources/**").permitAll();
                 })
                 // Above authorization needs to be done before generic otherwise we will not get the bypass
                 .authorizeRequests(authorize -> {
                     authorize
+                            .antMatchers("/h2-console/**").permitAll()
                             .antMatchers("/beers/find", "/beers*").permitAll() // adding find beer to permit all
                             .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll() // Permitting on path with only get requests
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll() // using mvc matchers
@@ -97,11 +99,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().and()
                 .httpBasic();
+
+                // configuration of h2 to allow iFrames
+                http.headers().frameOptions().sameOrigin();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+
+    // Bring in JpaUserDetailsRepositories
+//    @Autowired
+//    JpaUserDetailsService jpaUserDetailsService;
+    /**
+     * Provide authentication manager
+     * @param auth
+     * @throws Exception
+     */
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+
+        // This is going to work perfectly, but there are no additional implementation this is goign to work just fine by annotating
+//        auth.userDetailsService(this.jpaUserDetailsService);
+
+//        IN-MEMORY AUTH BEGIN
+        /*auth.inMemoryAuthentication()
         .withUser("spring")
                 // specify no password encoder in SpEL (spring Expression language)
 
@@ -148,8 +168,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          // overriding default encoder with a strength of 15
          .password("{bcrypt10}$2a$10$wqdESomygPUJFE/aGY3DausS2X/Ag3MjjPpxjYvlId4MuXaxC.j8u")
          .roles("CUSTOMER")
-        ;
-    }
+        ;*/
+
+//        IN-MEMORY AUTH END
+//    }
 
 // commenting this after adding
 // guru.sfg.brewery.config.SecurityConfig.configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
