@@ -5,18 +5,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 
 @Configuration
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    /**
+     * create filter
+     * @param authenticationManager
+     * @return
+     */
+    public RestHeaderAuthFilter restHeaderAuthFilter  (AuthenticationManager authenticationManager) {
+
+        RestHeaderAuthFilter filter = new RestHeaderAuthFilter(new AntPathRequestMatcher("/api/**"));
+        filter.setAuthenticationManager(authenticationManager);
+        return filter;
+    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -41,7 +64,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+
+//         adding a header filter
+        http.addFilterBefore(restHeaderAuthFilter(authenticationManager()),
+                UsernamePasswordAuthenticationFilter.class);
+
+        http.csrf().disable()
                 .authorizeRequests(authorize -> {
                     authorize.antMatchers("/","/webjars/**", "/login", "/resources/**").permitAll();
                 })
@@ -108,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //         .password("$2a$10$/8DKY6LrYQbZ.gLwpXl50OsKYuy9bMfWY1ybtlcghuEfQ0nsSZzbO")
 
          // overriding default encoder with a strength of 15
-         .password("{bcrypt15}$2a$15$CRQh43PC/vZ1wo0IkCCK7uyr03WXOIjoAlhGDsGg49JiIfmkMmlKe")
+         .password("{bcrypt10}$2a$10$wqdESomygPUJFE/aGY3DausS2X/Ag3MjjPpxjYvlId4MuXaxC.j8u")
          .roles("CUSTOMER")
         ;
     }
