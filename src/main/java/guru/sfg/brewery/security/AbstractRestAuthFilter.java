@@ -1,4 +1,4 @@
-package guru.sfg.brewery.config;
+package guru.sfg.brewery.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

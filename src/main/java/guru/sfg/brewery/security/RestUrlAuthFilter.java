@@ -1,4 +1,4 @@
-package guru.sfg.brewery.config;
+package guru.sfg.brewery.security;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RestUrlAuthFilter extends AbstractRestAuthFilter{
 
 
-    protected RestUrlAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    public RestUrlAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
     }
 

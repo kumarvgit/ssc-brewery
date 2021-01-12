@@ -40,7 +40,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getUsername(),
+                user.getPassword(),
                 user.getEnabled(),
                 user.getAccountNonExpired(),
                 user.getCredentialsNonExpired(),

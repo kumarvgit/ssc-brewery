@@ -1,4 +1,4 @@
-package guru.sfg.brewery.config;
+package guru.sfg.brewery.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class RestHeaderAuthFilter extends AbstractRestAuthFilter {
 
-    protected RestHeaderAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    public RestHeaderAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
     }
 
