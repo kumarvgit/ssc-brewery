@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class JpaUserDetailsService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Transactional
