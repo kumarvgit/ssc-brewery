@@ -60,4 +60,9 @@ public class BaseIT {
     public static Stream<Arguments> getStreamOfSuperAdmin() {
         return Stream.of(Arguments.of("spring", "guru"));
     }
+
+    public static Stream<Arguments> getStreamOfAdminCustomer() {
+        return Stream.of(Arguments.of("spring", "guru"),
+                Arguments.of("scott", "tiger"));
+    }
 }
