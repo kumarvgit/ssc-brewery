@@ -18,7 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Slf4j
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true) // use only preauthorized for security
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
@@ -86,8 +87,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             .antMatchers(HttpMethod.GET, "/api/v1/beer/**") // Permitting on path with only get requests
                                 .hasAnyRole("ADMIN", "CUSTOMER", "USER")
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").not().anonymous() // using mvc matchers
-                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**")
-                                .hasRole("ADMIN") // do not append ROLE_
+//                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**")
+//                                .hasRole("ADMIN") // do not append ROLE_
+//                            Above is commented out to use SpEL in guru.sfg.brewery.web.controllers.api.BeerRestController.deleteBeer
                             .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
                                 .hasAnyRole("ADMIN", "CUSTOMER")
                             .mvcMatchers(HttpMethod.GET, "/brewery/breweries**")
