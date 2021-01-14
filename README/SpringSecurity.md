@@ -21,3 +21,8 @@
 * Nooperation encoder - NoOpPasswordEncoder
 * LDAP - LdapShaPasswordEncoder
 * SHA256 - StandardPasswordEncoder
+
+
+# Role and Authority
+## Role is wide range whereas Authority adds finer granularity
+### ADMIN can read customers but not delete it but super_admin ca do both read and delete
