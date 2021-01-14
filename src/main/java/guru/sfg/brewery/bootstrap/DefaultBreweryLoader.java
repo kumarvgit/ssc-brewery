@@ -45,11 +45,17 @@ public class DefaultBreweryLoader implements CommandLineRunner {
     private final BeerOrderRepository beerOrderRepository;
     private final CustomerRepository customerRepository;
 
+
+
+
     @Override
     public void run(String... args) {
         loadBreweryData();
         loadCustomerData();
+
     }
+
+
 
     private void loadCustomerData() {
         Customer tastingRoom = Customer.builder()
