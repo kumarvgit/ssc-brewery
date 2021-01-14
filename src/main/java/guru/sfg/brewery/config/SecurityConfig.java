@@ -83,6 +83,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             .antMatchers("/beers/find", "/beers*").permitAll() // adding find beer to permit all
                             .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll() // Permitting on path with only get requests
                             .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll() // using mvc matchers
+                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasRole("ADMIN") // do not append ROLE_
+                            .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries**")
+                                .hasAnyRole("ADMIN", "CUSTOMER")
+                            .mvcMatchers(HttpMethod.GET, "/brewery/breweries**")
+                                .hasAnyRole("ADMIN", "CUSTOMER")
                             ;
                 })
                 // Ant matcher for beer service

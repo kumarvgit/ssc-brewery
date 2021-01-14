@@ -20,16 +20,18 @@ public class BaseIT {
 
     @Autowired
     WebApplicationContext wac;
-    @MockBean
-    BeerRepository beerRepository;
-    @MockBean
-    BeerInventoryRepository beerInventoryRepository;
-    @MockBean
-    BreweryService breweryService;
-    @MockBean
-    CustomerRepository customerRepository;
-    @MockBean
-    BeerService beerService;
+
+//    now we are using full mvc
+//    @MockBean
+//    BeerRepository beerRepository;
+//    @MockBean
+//    BeerInventoryRepository beerInventoryRepository;
+//    @MockBean
+//    BreweryService breweryService;
+//    @MockBean
+//    CustomerRepository customerRepository;
+//    @MockBean
+//    BeerService beerService;
 
     @BeforeEach
     void setUp() {

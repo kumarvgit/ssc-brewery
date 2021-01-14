@@ -28,19 +28,19 @@ public class UserDataLoader implements CommandLineRunner {
 
         Authority authorityAdmin = null;
         if (!authorityRepository.findByRole("ADMIN").isPresent()) {
-            authorityAdmin = authorityRepository.save(Authority.builder().role("ADMIN").build());
+            authorityAdmin = authorityRepository.save(Authority.builder().role("ROLE_ADMIN").build());
             log.debug("Authority loaded - 1");
         }
 
         Authority authorityUser = null;
         if (!authorityRepository.findByRole("USER").isPresent()) {
-            authorityUser = authorityRepository.save(Authority.builder().role("USER").build());
+            authorityUser = authorityRepository.save(Authority.builder().role("ROLE_USER").build());
             log.debug("Authority loaded - 2");
         }
 
         Authority authorityCustomer = null;
         if (!authorityRepository.findByRole("CUSTOMER").isPresent()) {
-            authorityCustomer = authorityRepository.save(Authority.builder().role("CUSTOMER").build());
+            authorityCustomer = authorityRepository.save(Authority.builder().role("ROLE_CUSTOMER").build());
             log.debug("Authority loaded - 3");
         }
 
