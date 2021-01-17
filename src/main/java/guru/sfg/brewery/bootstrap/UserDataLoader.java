@@ -22,17 +22,6 @@ import java.util.Set;
 @Component
 public class UserDataLoader implements CommandLineRunner {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final AuthorityRepository authorityRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    @Override
-    @Transactional
-    public void run(String... args) throws Exception {
-        loadSecurityData();
-    }
-
     private void loadSecurityData() {
 
         // beer auths
@@ -166,5 +155,16 @@ public class UserDataLoader implements CommandLineRunner {
 
         log.debug("Authority count: " + authorityRepository.count());
         log.debug("User count: " + userRepository.count());
+    }
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional
+    public void run(String... args) throws Exception {
+//        loadSecurityData();
     }
 }
