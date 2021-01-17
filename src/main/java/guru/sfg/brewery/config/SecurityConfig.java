@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Slf4j
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true) // use only preauthorized for security
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
@@ -80,9 +83,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(authorize -> {
                     authorize
                             .antMatchers("/h2-console/**").permitAll()
-                            .antMatchers("/beers/find", "/beers*").permitAll() // adding find beer to permit all
-                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll() // Permitting on path with only get requests
-                            .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll() // using mvc matchers
+//                            .antMatchers("/beers/find", "/beers*").permitAll() // adding find beer to permit all
+//                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**") // Permitting on path with only get requests
+//                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
+//                            .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").not().anonymous() // using mvc matchers
+//                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**")
+//                                .hasRole("ADMIN") // do not append ROLE_
+//                            Above is commented out to use SpEL in guru.sfg.brewery.web.controllers.api.BeerRestController.deleteBeer
+//                            .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
+//                                .hasAnyRole("ADMIN", "CUSTOMER")
+//                            .mvcMatchers(HttpMethod.GET, "/brewery/breweries**")
+//                                .hasAnyRole("ADMIN", "CUSTOMER")
+//                            .mvcMatchers("/beers/find", "/beers/{beerId}")
+//                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
                             ;
                 })
                 // Ant matcher for beer service
