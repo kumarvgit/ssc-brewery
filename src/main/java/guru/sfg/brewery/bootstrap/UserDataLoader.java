@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class UserDataLoader implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         loadSecurityData();
     }
@@ -61,6 +63,9 @@ public class UserDataLoader implements CommandLineRunner {
                 createCustomer, readCustomer, updateCustomer, deleteCustomer
         )));
 
+//        This is going to throw UnsupportedOperationException
+//        customerRole.setAuthorities(Set.of(readBeer, readBrewery, readCustomer));
+        // avoid UnsupportedOperationException since hibernate needs mutable instructions
         customerRole.setAuthorities(new HashSet<>(Set.of(readBeer, readBrewery, readCustomer)));
 
         userRole.setAuthorities(new HashSet<>(Set.of(readBeer)));
@@ -89,6 +94,11 @@ public class UserDataLoader implements CommandLineRunner {
                 .role(customerRole)
                 .build());
 
+
+        // verify the roles are being picked up
+        customerRole.getAuthorities().forEach(p -> {
+            System.out.println(p.getPermission());
+        });
 
 //        Authority authorityAdmin = null;
 //        if (!authorityRepository.findByRole("ADMIN").isPresent()) {
