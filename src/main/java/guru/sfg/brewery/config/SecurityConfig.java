@@ -90,12 +90,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**")
 //                                .hasRole("ADMIN") // do not append ROLE_
 //                            Above is commented out to use SpEL in guru.sfg.brewery.web.controllers.api.BeerRestController.deleteBeer
-                            .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
-                                .hasAnyRole("ADMIN", "CUSTOMER")
-                            .mvcMatchers(HttpMethod.GET, "/brewery/breweries**")
-                                .hasAnyRole("ADMIN", "CUSTOMER")
-                            .mvcMatchers("/beers/find", "/beers/{beerId}")
-                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
+//                            .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
+//                                .hasAnyRole("ADMIN", "CUSTOMER")
+//                            .mvcMatchers(HttpMethod.GET, "/brewery/breweries**")
+//                                .hasAnyRole("ADMIN", "CUSTOMER")
+//                            .mvcMatchers("/beers/find", "/beers/{beerId}")
+//                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
                             ;
                 })
                 // Ant matcher for beer service
