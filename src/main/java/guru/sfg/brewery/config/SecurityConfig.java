@@ -84,9 +84,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     authorize
                             .antMatchers("/h2-console/**").permitAll()
 //                            .antMatchers("/beers/find", "/beers*").permitAll() // adding find beer to permit all
-                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**") // Permitting on path with only get requests
-                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
-                            .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").not().anonymous() // using mvc matchers
+//                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**") // Permitting on path with only get requests
+//                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
+//                            .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").not().anonymous() // using mvc matchers
 //                            .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**")
 //                                .hasRole("ADMIN") // do not append ROLE_
 //                            Above is commented out to use SpEL in guru.sfg.brewery.web.controllers.api.BeerRestController.deleteBeer
