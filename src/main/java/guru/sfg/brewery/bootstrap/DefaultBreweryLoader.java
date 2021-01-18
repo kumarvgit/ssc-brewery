@@ -237,6 +237,7 @@ public class DefaultBreweryLoader implements CommandLineRunner {
         Authority readOrder = authorityRepository.save(Authority.builder().permission("order.read").build());
         Authority updateOrder = authorityRepository.save(Authority.builder().permission("order.update").build());
         Authority deleteOrder = authorityRepository.save(Authority.builder().permission("order.delete").build());
+        Authority pickupOrder = authorityRepository.save(Authority.builder().permission("order.pickup").build());
 
         // beer order permissions for customer, here in multitenancy this would be used to decide which role can do what operation
         // in this case the customer can modify his order
@@ -244,6 +245,7 @@ public class DefaultBreweryLoader implements CommandLineRunner {
         Authority readOrderCustomer = authorityRepository.save(Authority.builder().permission("customer.order.read").build());
         Authority updateOrderCustomer = authorityRepository.save(Authority.builder().permission("customer.order.update").build());
         Authority deleteOrderCustomer = authorityRepository.save(Authority.builder().permission("customer.order.delete").build());
+        Authority pickupOrderCustomer = authorityRepository.save(Authority.builder().permission("customer.order.pickup").build());
 
         Role adminRole = roleRepository.save(Role.builder().name("ADMIN").build());
         Role customerRole = roleRepository.save(Role.builder().name("CUSTOMER").build());
@@ -253,7 +255,8 @@ public class DefaultBreweryLoader implements CommandLineRunner {
                 createBeer, readBeer, updateBeer, deleteBeer,
                 createBrewery, readBrewery, updateBrewery, deleteBrewery,
                 createCustomer, readCustomer, updateCustomer, deleteCustomer,
-                createOrder, readOrder, updateOrder, deleteOrder
+                createOrder, readOrder, updateOrder, deleteOrder,
+                pickupOrder
         )));
 
 //        This is going to throw UnsupportedOperationException
@@ -261,7 +264,8 @@ public class DefaultBreweryLoader implements CommandLineRunner {
         // avoid UnsupportedOperationException since hibernate needs mutable instructions
         customerRole.setAuthorities(new HashSet<>(Set.of(
                 readBeer, readBrewery, readCustomer,
-                createOrderCustomer, readOrderCustomer, updateOrderCustomer, deleteOrderCustomer
+                createOrderCustomer, readOrderCustomer, updateOrderCustomer, deleteOrderCustomer,
+                pickupOrderCustomer
         )));
 
         userRole.setAuthorities(new HashSet<>(Set.of(readBeer)));
