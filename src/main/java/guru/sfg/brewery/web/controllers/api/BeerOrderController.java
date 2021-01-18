@@ -17,11 +17,14 @@
 
 package guru.sfg.brewery.web.controllers.api;
 
+import guru.sfg.brewery.security.permissions.BeerOrderCreatePermission;
+import guru.sfg.brewery.security.permissions.BeerOrderReadPermission;
 import guru.sfg.brewery.services.BeerOrderService;
 import guru.sfg.brewery.web.model.BeerOrderDto;
 import guru.sfg.brewery.web.model.BeerOrderPagedList;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -43,6 +46,8 @@ public class BeerOrderController {
     }
 
     @GetMapping("orders")
+    // TODO DRY principle add annotation and remove duplicate code
+    @BeerOrderReadPermission
     public BeerOrderPagedList listOrders(@PathVariable("customerId") UUID customerId,
                                          @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize){
@@ -60,11 +65,13 @@ public class BeerOrderController {
 
     @PostMapping("orders")
     @ResponseStatus(HttpStatus.CREATED)
+    @BeerOrderCreatePermission
     public BeerOrderDto placeOrder(@PathVariable("customerId") UUID customerId, @RequestBody BeerOrderDto beerOrderDto){
         return beerOrderService.placeOrder(customerId, beerOrderDto);
     }
 
     @GetMapping("orders/{orderId}")
+    @BeerOrderReadPermission
     public BeerOrderDto getOrder(@PathVariable("customerId") UUID customerId, @PathVariable("orderId") UUID orderId){
         return beerOrderService.getOrderById(customerId, orderId);
     }
