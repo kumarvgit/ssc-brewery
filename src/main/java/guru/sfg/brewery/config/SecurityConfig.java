@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // use only preauthorized for security
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final PersistentTokenRepository persistentTokenRepository;
 
     /**
      * Get {@link UserDetailsService} for remember-me
@@ -141,8 +143,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // base64(username + ":" + expirationTime + ":" + md5Hex(username + ":" + expirationTime + ":" password + ":" + key))
                 // on successfully authenticating with remember me spring security context is going to
                 // console log "Previously Authenticated: org.springframework.security.authentication.RememberMeAuthenticationToken"
-                .and() // Add remember me config
-                .rememberMe().key("sfg-key").userDetailsService(userDetailsService);
+//                .and() // Add remember me config using non persistence method
+//                .rememberMe().key("sfg-key")
+//                .userDetailsService(userDetailsService);
+
+                .and()// using remember me using persistence storage
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository)
+                .userDetailsService(userDetailsService);
 
                 // configuration of h2 to allow iFrames
                 http.headers().frameOptions().sameOrigin();
