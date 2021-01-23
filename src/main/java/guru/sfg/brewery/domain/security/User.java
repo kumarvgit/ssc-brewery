@@ -101,6 +101,15 @@ public class User  implements UserDetails, CredentialsContainer {
     @Builder.Default
     private Boolean enabled = true;
 
+    @Builder.Default
+    private Boolean useGoogle2fa = false;
+
+    private String google2faSecret;
+
+    // here we are setting this to tru since in filter we are going to run #useGoogle2fa && google2faRequired
+    @Transient // only on pojo but not stored in db
+    private Boolean google2faRequired = true;
+
     @Override
     public void eraseCredentials() {
         this.password = null;
