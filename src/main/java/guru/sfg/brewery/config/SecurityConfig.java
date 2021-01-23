@@ -3,6 +3,7 @@ package guru.sfg.brewery.config;
 import guru.sfg.brewery.security.RestHeaderAuthFilter;
 import guru.sfg.brewery.security.RestUrlAuthFilter;
 import guru.sfg.brewery.security.SfgPasswordEncoderFactories;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,16 +13,26 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@RequiredArgsConstructor
 @Configuration
 @Slf4j
 //@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true) // use only preauthorized for security
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final PersistentTokenRepository persistentTokenRepository;
+
+    /**
+     * Get {@link UserDetailsService} for remember-me
+     */
+    private final UserDetailsService userDetailsService;
     /**
      * create filter
      * @param authenticationManager
@@ -67,12 +78,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+
+    // needed to inject security context in JPA
+    @Bean
+    public SecurityEvaluationContextExtension securityEvaluationContextExtension(){
+        return new SecurityEvaluationContextExtension();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
 //         adding a header filter
         http.addFilterBefore(
-                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class).csrf().disable();
+                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+//                .csrf().disable();
+                .csrf().ignoringAntMatchers("/h2-console/**", "/api/**");
         http.addFilterBefore(
                         restUrlAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
@@ -101,9 +121,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Ant matcher for beer service
                 .authorizeRequests()
                 .anyRequest().authenticated()
+
                 .and()
-                .formLogin().and()
-                .httpBasic();
+//                .formLogin() // default login form
+                .formLogin(loginConfigurer -> {
+                    loginConfigurer.loginProcessingUrl("/login")// this is spring url
+                    .loginPage("/")
+                    .permitAll()
+                    .successForwardUrl("/")
+                    .defaultSuccessUrl("/")
+                    .failureUrl("/?error");
+                }) // add custom login page
+                .logout(logoutConfigurer -> {
+                            logoutConfigurer.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                                    .logoutSuccessUrl("/?logout")
+                                    .permitAll();
+                        }
+                )// overriding the logout behaviour
+                .httpBasic()
+                // remember me cookie is going to get store in following format
+                // base64(username + ":" + expirationTime + ":" + md5Hex(username + ":" + expirationTime + ":" password + ":" + key))
+                // on successfully authenticating with remember me spring security context is going to
+                // console log "Previously Authenticated: org.springframework.security.authentication.RememberMeAuthenticationToken"
+//                .and() // Add remember me config using non persistence method
+//                .rememberMe().key("sfg-key")
+//                .userDetailsService(userDetailsService);
+
+                .and()// using remember me using persistence storage
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository)
+                .userDetailsService(userDetailsService);
 
                 // configuration of h2 to allow iFrames
                 http.headers().frameOptions().sameOrigin();

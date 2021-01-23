@@ -8,8 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +43,7 @@ public class CustomerControllerIT  extends BaseIT {
         public void processCreationForm() throws Exception {
 
             mockMvc.perform(post("/customers/new").param("customerName", "Foo Customer")
-                    .with(httpBasic("spring", "guru")))
+                    .with(httpBasic("spring", "guru")).with(csrf()))
             .andExpect(status().is3xxRedirection());
         }
 
@@ -61,7 +60,8 @@ public class CustomerControllerIT  extends BaseIT {
         public void processCreationFormNoAuth() throws Exception {
 
             mockMvc.perform(post("/customers/new").param("customerName", "Foo Customer")
-                    .with(anonymous()))
+                    .with(anonymous())
+                    .with(csrf()))
                     .andExpect(status().isUnauthorized());
         }
     }

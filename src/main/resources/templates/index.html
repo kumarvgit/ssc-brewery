@@ -17,7 +17,9 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout (~{::body},'home')}">
 <head>
     <meta charset="UTF-8"/>
     <title>SFG Brewery</title>
@@ -25,6 +27,39 @@
 <body>
 <h2 th:text="#{welcomemsg}">SFG Brewery Monolith</h2>
 
+<div sec:authorize="!isAuthenticated()" class="row">
+    <div class="col-md-12">
+
+        <!--<p th:if="${loginError}" class="error">Wrong Username or password</p>-->
+        <!--<div th:if="${param.error}" class="alert alert-danger">Invalid username or password</div>-->
+        <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']?.message} == 'Bad credentials'" class="alert alert-danger">Invalid username or password</div>
+
+        <!--User account is locked-->
+        <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']?.message} == 'User account is locked'" class="alert alert-danger">User account is locked</div>
+
+        <div th:if="${param.logout}" class="alert alert-success">Logged out successfully</div>
+        <form th:action="@{/login}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" autofocus="true" autocomplete="off">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" autofocus="true" autocomplete="off">
+            <input type="submit" value="Log In">
+
+            <!--This is by default given by spring security-->
+            <label for="remember-me">Remember Me:</label>
+            <input type="checkbox" id="remember-me" name="remember-me">
+        </form>
+    </div>
+</div>
+<div class="row" sec:authorize="isAuthenticated()">
+    <div class="col-md-12">
+        <!--Here ? checks for null value-->
+        <p th:text="'Welcome: ' + ${#authentication?.principal?.username}">User</p>
+        <p><a th:href="@{/logout}">Logout</a></p>
+    </div>
+</div>
+
+<!--<h2 th:text="${session['SPRING_SECURITY_LAST_EXCEPTION']?.message}"></h2>-->
 <div class="row">
     <div class="col-md-12">
         <img class="img-responsive" src="../static/resources/images/brewery.png" th:src="@{/resources/images/brewery.png}"/>
