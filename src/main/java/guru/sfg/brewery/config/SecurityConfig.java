@@ -118,11 +118,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/")
                     .permitAll()
                     .successForwardUrl("/")
-                    .defaultSuccessUrl("/");
+                    .defaultSuccessUrl("/")
+                    .failureUrl("/?error");
                 }) // add custom login page
                 .logout(logoutConfigurer -> {
                             logoutConfigurer.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                                    .logoutSuccessUrl("/")
+                                    .logoutSuccessUrl("/?logout")
                                     .permitAll();
                         }
                 )// overriding the logout behaviour
