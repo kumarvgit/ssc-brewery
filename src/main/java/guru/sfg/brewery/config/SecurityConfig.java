@@ -80,7 +80,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //         adding a header filter
         http.addFilterBefore(
-                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class).csrf().disable();
+                        restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+//                .csrf().disable();
+                .csrf().ignoringAntMatchers("/h2-console/**", "/api/**");
         http.addFilterBefore(
                         restUrlAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
