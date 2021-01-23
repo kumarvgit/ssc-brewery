@@ -112,7 +112,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().and()
+//                .formLogin() // default login form
+                .formLogin(loginConfigurer -> {
+                    loginConfigurer.loginProcessingUrl("/login")// this is spring url
+                    .loginPage("/")
+                    .permitAll()
+                    .successForwardUrl("/")
+                    .defaultSuccessUrl("/");
+                }) // add custom login page
+                .logout(logoutConfigurer -> {
+                            logoutConfigurer.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                                    .logoutSuccessUrl("/")
+                                    .permitAll();
+                        }
+                )// overriding the logout behaviour
                 .httpBasic();
 
                 // configuration of h2 to allow iFrames
