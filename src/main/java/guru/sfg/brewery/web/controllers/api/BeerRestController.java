@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin // we can use class level cross origin
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
@@ -126,6 +127,7 @@ public class BeerRestController {
     }
 
 
+    @CrossOrigin // web mvc configurer for delete mapping we can use WebMvcConfigurer
     @DeleteMapping({"beer/{beerId}"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
 //    @PreAuthorize("hasRole('ADMIN')") // use SpEL
