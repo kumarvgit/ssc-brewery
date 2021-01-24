@@ -35,7 +35,8 @@ public class SecurityBean {
         GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder configBuilder =
                 new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder();
 
-        configBuilder.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(60))
+        // 20210124T1354 IST changing the config to 30 since 60 doesnt not work
+        configBuilder.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
                 .setWindowSize(10)
                 .setNumberOfScratchCodes(0);
 
