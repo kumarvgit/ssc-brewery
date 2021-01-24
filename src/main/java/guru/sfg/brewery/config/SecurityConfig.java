@@ -104,7 +104,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(
                         restUrlAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
-        http.authorizeRequests(authorize -> {
+        // adding cors filters since pre-flight i.e. HttpMethod.OPTIONS requests are not going to be authorized
+        // Since these are the check whether or not the methods are allowed
+        http.cors()
+                .and().
+                authorizeRequests(authorize -> {
                     authorize.antMatchers("/","/webjars/**", "/login", "/resources/**").permitAll();
                 })
                 // Above authorization needs to be done before generic otherwise we will not get the bypass
